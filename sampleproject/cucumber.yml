@@ -1,0 +1,4 @@
+<%
+std_opts = "--tags ~@deprecated -f pretty -f junit -o results -f json -o cucumber.json -f html -o report.html"
+%>
+default: <%= std_opts %> features

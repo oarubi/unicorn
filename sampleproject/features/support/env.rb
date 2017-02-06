@@ -17,6 +17,8 @@ config :driver=>"restful",
 	:web_host=>"#{APP_PROTOCAL}://#{APP_HOST}:#{APP_PORT}"
 
 config :driver=>"capybara", 
+	#:url => GRID_URL,
+	#:desired_capabilities => Selenium::WebDriver::Remote::Capabilities.chrome,
 	:web_host=>"#{APP_PROTOCAL}://#{APP_HOST}:#{APP_PORT}", 
 	:browser=>:chrome,#:poltergeist, 
 	:local_repo=>File.join(File.dirname(__FILE__), 'xpath_repo_local.txt'),

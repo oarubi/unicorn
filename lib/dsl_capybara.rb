@@ -31,14 +31,28 @@ module DSLSet
           #       Capybara::Poltergeist::Driver.new(app, options)
           #   end
           # else
+          if cfgs[:url]
+            Capybara.app_host = cfgs[:web_host]
+            Capybara.register_driver :remote_browser do |app|
+              Capybara::Selenium::Driver.new(
+                app,
+                :browser => :remote,
+                url: cfgs[:url],
+                desired_capabilities: cfgs[:desired_capabilities]
+              )
+            end
+
+            Capybara.default_driver = :remote_browser
+            Capybara.javascript_driver = :remote_browser
+          else
             Capybara.register_driver :selenium do |app|
               Capybara::Selenium::Driver.new(app, :browser => browser)
             end
             Capybara.javascript_driver = browser         
             Capybara.default_driver = :selenium
-          # end
+          end
           register_local_repo(cfgs[:local_repo]) if cfgs.keys.include?(:local_repo)
-          Capybara.default_wait_time = cfgs[:default_wait_time] if cfgs.keys.include?(:default_wait_time)
+          Capybara.default_max_wait_time = cfgs[:default_max_wait_time] if cfgs.keys.include?(:default_max_wait_time)
 
           #Settings changed since v2.1, use the old config
           # Capybara.configure do |config|
@@ -337,9 +351,9 @@ module DSLSet
         #Return the first matched object by given xpaths
         def find_object_by_xpath(xpaths)
           err = []
-          x = Capybara.default_wait_time
+          x = Capybara.default_max_wait_time
           begin
-            Capybara.default_wait_time = 0.1
+            Capybara.default_max_wait_time = 0.1
             i = 0
             while i < x*10
               begin
@@ -371,17 +385,17 @@ module DSLSet
             end 
           rescue => er
           ensure
-            Capybara.default_wait_time = x
+            Capybara.default_max_wait_time = x
           end
         end
 
         def default_xpaths type, hash
-          x = Capybara.default_wait_time
+          x = Capybara.default_max_wait_time
           sucFlg = false
           list = []
           begin
             i = 0
-            Capybara.default_wait_time = 0.1
+            Capybara.default_max_wait_time = 0.1
             while i < x*10 and !sucFlg
               begin
                 buildxpath(type, hash).each do |xpath|
@@ -424,7 +438,7 @@ module DSLSet
             end
           rescue => ee
           ensure
-            Capybara.default_wait_time = x
+            Capybara.default_max_wait_time = x
           end
         end        
     end

@@ -18,6 +18,7 @@
 //button[@class='%locator%']
 //button[contains(.,'%locator%')]
 //input[@type='submit'][@value='%locator%']
+//input[@type='Submit'][@value='%locator%']
 //input[@type='button'][@value='%locator%']
 //img[@name='%locator%']
 //img[@alt='%locator%']
